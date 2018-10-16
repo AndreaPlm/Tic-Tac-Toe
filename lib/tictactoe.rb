@@ -14,11 +14,13 @@ class Game # Une partie contient des joueurs et un plateau
 
   def play
 
-    #unless check_winner
+#  unless check_winner == 1 || check_winner == 2
     @board.display
-
-    4.times do
+    nb_turn = 0
+    #4.times do
+  while check_winner == 0 || nb_turn == 8 do
       #PLayer1 joue
+      nb_turn +=1
       puts "#{@player1.player_name} to play ! What is your move ?"
       board_case = gets.chomp
       @board.board_cases.each do |elem|
@@ -31,8 +33,11 @@ class Game # Une partie contient des joueurs et un plateau
 
       if check_winner == 1 then puts "#{@player1.player_name} a gagné !" end
       if check_winner == 2 then puts "#{@player2.player_name} a gagné !" end
+      if check_winner == 0 && nb_turn == 8 then puts "It's a toe !" end
+
 
       #PLayer2 joue
+      nb_turn +=1
       puts "#{@player2.player_name} to play ! What is your move ?"
       board_case = gets.chomp
       @board.board_cases.each do |elem|
@@ -45,13 +50,16 @@ class Game # Une partie contient des joueurs et un plateau
 
       if check_winner == 1 then puts "#{@player1.player_name} a gagné !" end
       if check_winner == 2 then puts "#{@player2.player_name} a gagné !" end
+
     end
   end
 
+
   def check_winner
     winner = 0
+# Verifie les lignes (attention aux yeux....)
+# Ligne 1
     sum = 0
-
     3.times do |i|
       sum += @board.board_cases[i].val
     end
@@ -59,10 +67,11 @@ class Game # Une partie contient des joueurs et un plateau
       winner = 1
       return winner
     elsif sum == -3 then
-      winner
+      winner = 2
       return winner
     end
-
+# Ligne 2
+    sum = 0
     3.times do |i|
       sum += @board.board_cases[i+3].val
     end
@@ -70,10 +79,11 @@ class Game # Une partie contient des joueurs et un plateau
       winner = 1
       return winner
     elsif sum == -3 then
-      winner
+      winner = 2
       return winner
     end
-
+# Ligne 3
+    sum = 0
     3.times do |i|
       sum += @board.board_cases[i+6].val
     end
@@ -81,44 +91,78 @@ class Game # Une partie contient des joueurs et un plateau
       winner = 1
       return winner
     elsif sum == -3 then
-      winner
+      winner = 2
       return winner
     end
 
-=begin
-    winner = 0
-    @board.board_cases.each do |elem|
-      sum = 0
-      puts winner
-      3.times do |i|
-        if elem.abs == i
-          sum += elem.val
+# Verifie les colonnes (et c'est pas fini....)
+    # Colonne 1
+        sum = 0
+        3.times do |i|
+          sum += @board.board_cases[i*3].val
         end
-        if sum == 3
+        if sum == 3 then
           winner = 1
           return winner
-        elsif sum == -3
+        elsif sum == -3 then
           winner = 2
           return winner
         end
-      end
+    # Colonne 2
+        sum = 0
+        3.times do |i|
+          sum += @board.board_cases[i*3+1].val
+        end
+        if sum == 3 then
+          winner = 1
+          return winner
+        elsif sum == -3 then
+          winner = 2
+          return winner
+        end
+    # Colonne 3
+        sum = 0
+        3.times do |i|
+          sum += @board.board_cases[i*3+2].val
+        end
+        if sum == 3 then
+          winner = 1
+          return winner
+        elsif sum == -3 then
+          winner = 2
+          return winner
+        end
 
+  # ET CEST PARTI POUR LES DIAGONAAAAAAAAAALES (coucou il est 21h45)
+
+  # Diagonale 1
       sum = 0
       3.times do |i|
-        if elem.ord == i
-          sum += elem.val
-        end
-        if sum == 3
-          winner = 1
-          return winner
-        elsif sum == -3
-          winner = 2
-          return winner
-        end
+        sum += @board.board_cases[i*3+i].val
       end
-    end
-=end
-  end
+      if sum == 3 then
+        winner = 1
+        return winner
+      elsif sum == -3 then
+        winner = 2
+        return winner
+      end
+  # Diagonale 2
+      sum = 0
+      3.times do |i|
+        sum += @board.board_cases[(i+1)*3-(i+1)].val
+      end
+      if sum == 3 then
+        winner = 1
+        return winner
+      elsif sum == -3 then
+        winner = 2
+        return winner
+      end
+  return winner
+
+
+  end #end check winner
 
 
 end # End Game
