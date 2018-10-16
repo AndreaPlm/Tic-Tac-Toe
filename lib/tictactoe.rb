@@ -12,13 +12,12 @@ class Game # Une partie contient des joueurs et un plateau
     @player2 = Player.new(gets.chomp)
   end
 
-  def play
+  def play #enchaine les tours de jeux jusqu'à ce que quelqu'un soit victorieux ou jusqu'à 9 tours
 
-#  unless check_winner == 1 || check_winner == 2
-    @board.display
+    @board.display #montre le plateau vide
     nb_turn = 0
-    #4.times do
-  while check_winner == 0 && nb_turn != 9 do
+
+    while check_winner == 0 && nb_turn != 9 do
       #PLayer1 joue
       nb_turn +=1
       puts "#{@player1.player_name} to play ! What is your move ?"
@@ -56,7 +55,7 @@ class Game # Une partie contient des joueurs et un plateau
   end
 
 
-  def check_winner
+  def check_winner # renvoi 0 si pas de winner, 1 si le joueur 1 gagne, 2 si le joueur 2 gagne
     winner = 0
 # Verifie les lignes (attention aux yeux....)
 # Ligne 1
@@ -175,8 +174,6 @@ class Player # Chaque joueur possède un nom et un score
   def initialize(name)
     @player_name = name
     @score = 0
-
-
   end
 
 end # End Player
@@ -278,19 +275,13 @@ class BoardCase # Les cases d'un plateau
   end
 end
 
-
 end # End BoardCase
-
-
 
 # binding.pry
 
-
 def perform
-
   game = Game.new
   game.play
-
 end
 
 perform
