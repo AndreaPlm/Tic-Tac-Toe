@@ -4,22 +4,6 @@ require 'rubocop'
 
 class Game # Une partie contient des joueurs et un plateau
 
-=begin
-    def get_players()
-      @players = []
-
-      puts "Player 1: enter your name"
-      name1 =  gets.chomp
-      player1 = Players.new(name1)
-      @players << player1
-      puts "Player 2: enter your name"
-      name2 = gets.chomp
-      player2 = Players.new(name2)
-      @players << player2
-    end
-=end
-
-
 end # End Game
 
 
@@ -78,38 +62,61 @@ end # End Board
 
 
 class BoardCase # Les cases d'un plateau
+  attr_accessor :case_name, :abs, :ord , :val
 
-  #TO DO : la classe a 2 attr_accessor, sa valeur (X, O, ou vide), ainsi que son numéro de case)
+  #A la creation d'une case : abscisse/ordonnée/nom correspondant
+  def initialize(abs, ord)
+    @abs = abs
+    @ord = ord
+    @case_name = "#{convert_ord_to_letter(ord)}#{abs+1}"
+    @val = 0
+  end
 
-    attr_accessor :val, :case_number
+  # Convertir les ordonnées en lettre afin de nommer correctement une case
+  def convert_ord_to_letter(int)
+    alphabet = ("A".."Z").to_a
+    return alphabet[int]
+  end
 
-    def initialize(val, nb)
-      @val = val
-      @case_number = nb
-    end
+  # Définir le statut de la case [X] [O] [ ]
+  def case_to_x()
+    @val = 1 # [X] = 1
+  end
+  def case_to_o()
+    @val = 2 # [O] = 2
+  end
+  def case_to_empty()
+    @val = 0 # [ ] = 0
+  end
 
-    def create_cases()
-      a1 = BoardCase.new(0,1)
-      a2 = BoardCase.new(0,2)
-      a3 = BoardCase.new(0,3)
-      b1 = BoardCase.new(0,4)
-      b2 = Boardcase.new(0,5)
-      b3 = Boardcase.new(0,6)
-      c1 = Boardcase.new(0,7)
-      c2 = Boardcase.new(0,8)
-      c3 = Boardcase.new(0,9)
-    end
+  # Renvoyer la valeur de la case
+  def case_value()
+    return value = self.val
+  end
 
-    def to_s
-      # Renvoi la valeur au format string
-      if @val == 0 then return "| |"
-      elsif @val == 1 then return "|X|"
-      elsif @val == 2 then return "|O|"
-      end
-    end
+  def case_display()
+   if @val == 0
+    "| |"
+  elsif @val == 2
+    "|O|"
+  elsif @val == 1
+    "|X|"
+  end
+end
+
 
 end # End BoardCase
 
 
 
 binding.pry
+
+
+def perform
+
+  # Créer un plateau
+  board = Board.new
+
+  game = Game.new
+
+end
