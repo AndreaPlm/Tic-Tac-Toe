@@ -3,6 +3,30 @@ require 'rubocop'
 
 
 class Game # Une partie contient des joueurs et un plateau
+  def initialize
+    board = Board.new
+    puts "Enter player 1"
+    @player1 = Player.new(gets.chomp)
+    puts "Enter player 2"
+    @player2 = Player.new(gets.chomp)
+  end
+
+  def play
+    unless check_winner
+      puts "#{@player1.player_name} to play ! What is your move ?"
+      board_case = gets.chomp
+      board.board_cases.each do |elem|
+        if elem.case_name == board_case
+          elem.val = 1
+          break
+        end
+      end
+      check_winner
+    end
+  end
+
+
+
 
 end # End Game
 
@@ -13,6 +37,8 @@ class Player # Chaque joueur possède un nom et un score
   def initialize(name)
     @player_name = name
     @score = 0
+
+
   end
 
 end # End Player
@@ -21,22 +47,18 @@ end # End Player
 class Board # Un plateau contient des cases
   attr_accessor :board_cases
 
-  def initialize # A la creation un plateau est vide, on le rempli de cases vides
-    @board_cases = {}
-  end
-
-  # Remplir un plateau avec des cases
-  def fill(x=3, y=x)
+  def initialize(x=3, y=x) # A la creation un plateau est vide, on le rempli de cases vides
+    @board_cases = []
     @length = x
     @height = y
 
-    alphabet = ("A".."Z").to_a
     y.times do |y|
       x.times do |x|
-        @board_cases[alphabet[y] + "#{x+1}"] = BoardCase.new(x,y)
+        @board_cases << BoardCase.new(x,y)
       end
     end
   end
+
 
   # Vider un plateau
   def empty()
@@ -45,15 +67,29 @@ class Board # Un plateau contient des cases
 
   # Afficher un plateau
   def display()
+    alphabet = ("A".."Z").to_a
     x = 0 # Compteur pour le retour à la ligne
+    y = 0 # Compteur pour les lettres en ordonnées
+
+    print "  "
+    @length.times do |i| # Print chiffres première ligne
+      print " #{i+1} "
+    end
+    print "\n "
+
     @board_cases.each do |board_case|
-      to_display = board_case.case_display
-      x +=1
-      if x == @length
-        to_display = to_display + "\n"
-        x=0
+      # Print les lettres (colonnes)
+      if x % @length == 0
+        print alphabet[y]
+        y += 1
       end
-      print to_display
+
+      # Print les cases
+      print board_case.to_s
+      x +=1
+      if x % @length == 0
+        print "\n "
+      end
     end
   end
 
@@ -94,7 +130,7 @@ class BoardCase # Les cases d'un plateau
     return value = self.val
   end
 
-  def case_display()
+  def to_s()
    if @val == 0
     "| |"
   elsif @val == 2
