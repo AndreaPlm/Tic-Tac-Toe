@@ -2,36 +2,61 @@ require 'pry'
 require 'rubocop'
 
 
-class Player
+class Game # Une partie contient des joueurs et un plateau
+
+  @players = []
+
+end # End Game
+
+
+class Player # Chaque joueur possède un nom et un score
   attr_accessor :name, :score
 
   def initialize(name)
     @name = name
     @score = 0
   end
-end
+end # End Player
 
 
+class Board # Un plateau contient des cases
 
-class Board
-  def create_board(n)
-    
-
+  def initialize # A la creation un plateau est vide
+    @board_cases = []
   end
-end
+
+  # Remplir un plateau avec des cases
+  def fulfill_board(x=3, y=x)
+    x.times do |x|
+      y.times do |y|
+        board_case = BoardCase.new(x,y)
+        @board_cases << board_case
+      end
+    end
+  end
+
+end # End Board
 
 
-class BoardCase
+
+class BoardCase # Les cases d'un plateau
   attr_accessor :abs, :ord , :val
 
-#définir l'emplacement de la case (absysse/ordonnée)
+  #A la creation d'une case : abscisse/ordonnée/nom correspondant
   def initialize(abs, ord)
     @abs = abs
     @ord = ord
+    @name = "#{abs+1}#{convert_ord_to_letter(ord)}"
     @value = 0
   end
 
-#définir le statut de la case [X] [O] [ ]
+  # Convertir les ordonnées en lettre afin de nommer correctement une case
+  def convert_ord_to_letter(int)
+    alphabet = ("A".."Z").to_a
+    return alphabet[int]
+  end
+
+  # Définir le statut de la case [X] [O] [ ]
   def case_to_x()
     @value = 1 # [X] = 1
   end
@@ -41,20 +66,19 @@ class BoardCase
   def case_to_empty()
     @value = 0 # [ ] = 0
   end
-end
+
+end # End BoardCase
 
 
-class Game
 
-
-end
+binding.pry
 
 
 def perform
 
-#créer un plateau
- board = Board.new
-
-
+  # Créer un plateau
+  board = Board.new
 
   game = Game.new
+
+end
