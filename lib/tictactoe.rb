@@ -18,7 +18,7 @@ class Game # Une partie contient des joueurs et un plateau
     @board.display
     nb_turn = 0
     #4.times do
-  while check_winner == 0 || nb_turn != 9 do
+  while check_winner == 0 && nb_turn != 9 do
       #PLayer1 joue
       nb_turn +=1
       puts "#{@player1.player_name} to play ! What is your move ?"
@@ -34,6 +34,7 @@ class Game # Une partie contient des joueurs et un plateau
       if check_winner == 1 then puts "#{@player1.player_name} a gagné !" end
       if check_winner == 2 then puts "#{@player2.player_name} a gagné !" end
       if check_winner == 0 && nb_turn == 9 then puts "It's a toe !" end
+      if check_winner == 1 || check_winner == 2 || nb_turn == 9 then break end
 
 
       #PLayer2 joue
@@ -282,14 +283,14 @@ end # End BoardCase
 
 
 
-binding.pry
+# binding.pry
 
 
 def perform
 
-  # Créer un plateau
-  board = Board.new
-
   game = Game.new
+  game.play
 
 end
+
+perform
