@@ -4,20 +4,121 @@ require 'rubocop'
 
 class Game # Une partie contient des joueurs et un plateau
 
-=begin
-    def get_players()
-      @players = []
+  def initialize
+    @board = Board.new
+    puts "Enter player 1"
+    @player1 = Player.new(gets.chomp)
+    puts "Enter player 2"
+    @player2 = Player.new(gets.chomp)
+  end
 
-      puts "Player 1: enter your name"
-      name1 =  gets.chomp
-      player1 = Players.new(name1)
-      @players << player1
-      puts "Player 2: enter your name"
-      name2 = gets.chomp
-      player2 = Players.new(name2)
-      @players << player2
+  def play
+
+    #unless check_winner
+    @board.display
+
+    4.times do
+      #PLayer1 joue
+      puts "#{@player1.player_name} to play ! What is your move ?"
+      board_case = gets.chomp
+      @board.board_cases.each do |elem|
+        if elem.case_name == board_case
+          elem.val = 1
+          break
+        end
+      end
+      @board.display
+
+      if check_winner == 1 then puts "#{@player1.player_name} a gagné !" end
+      if check_winner == 2 then puts "#{@player2.player_name} a gagné !" end
+
+      #PLayer2 joue
+      puts "#{@player2.player_name} to play ! What is your move ?"
+      board_case = gets.chomp
+      @board.board_cases.each do |elem|
+        if elem.case_name == board_case
+          elem.val = -1
+          break
+        end
+      end
+      @board.display
+
+      if check_winner == 1 then puts "#{@player1.player_name} a gagné !" end
+      if check_winner == 2 then puts "#{@player2.player_name} a gagné !" end
+    end
+  end
+
+  def check_winner
+    winner = 0
+    sum = 0
+
+    3.times do |i|
+      sum += @board.board_cases[i].val
+    end
+    if sum == 3 then
+      winner = 1
+      return winner
+    elsif sum == -3 then
+      winner
+      return winner
+    end
+
+    3.times do |i|
+      sum += @board.board_cases[i+3].val
+    end
+    if sum == 3 then
+      winner = 1
+      return winner
+    elsif sum == -3 then
+      winner
+      return winner
+    end
+
+    3.times do |i|
+      sum += @board.board_cases[i+6].val
+    end
+    if sum == 3 then
+      winner = 1
+      return winner
+    elsif sum == -3 then
+      winner
+      return winner
+    end
+
+=begin
+    winner = 0
+    @board.board_cases.each do |elem|
+      sum = 0
+      puts winner
+      3.times do |i|
+        if elem.abs == i
+          sum += elem.val
+        end
+        if sum == 3
+          winner = 1
+          return winner
+        elsif sum == -3
+          winner = 2
+          return winner
+        end
+      end
+
+      sum = 0
+      3.times do |i|
+        if elem.ord == i
+          sum += elem.val
+        end
+        if sum == 3
+          winner = 1
+          return winner
+        elsif sum == -3
+          winner = 2
+          return winner
+        end
+      end
     end
 =end
+  end
 
 
 end # End Game
@@ -29,6 +130,8 @@ class Player # Chaque joueur possède un nom et un score
   def initialize(name)
     @player_name = name
     @score = 0
+
+
   end
 
 end # End Player
@@ -37,82 +140,112 @@ end # End Player
 class Board # Un plateau contient des cases
   attr_accessor :board_cases
 
-  def initialize # A la creation un plateau est vide, on le rempli de cases vides
+  def initialize(x=3, y=x) # A la creation un plateau est vide, on le rempli de cases vides
     @board_cases = []
-      a1 = BoardCase.new(0,1)
-      @board_cases << a1
-      a2 = BoardCase.new(0,2)
-      @board_cases << a2
-      a3 = BoardCase.new(0,3)
-      @board_cases << a3
-      b1 = BoardCase.new(0,4)
-      @board_cases << b1
-      b2 = BoardCase.new(0,5)
-      @board_cases << b2
-      b3 = BoardCase.new(0,6)
-      @board_cases << b3
-      c1 = BoardCase.new(0,7)
-      @board_cases << c1
-      c2 = BoardCase.new(0,8)
-      @board_cases << c2
-      c3 = BoardCase.new(0,9)
-      @board_cases << c3
-  end
+    @length = x
+    @height = y
 
-
-  def to_s
-    i = 0
-    @board_cases.each do |elem|
-      if i == 3
-      print "\n"
-      i = 0
+    y.times do |y|
+      x.times do |x|
+        @board_cases << BoardCase.new(x,y)
       end
-    print elem.to_s
-    i += 1
     end
   end
+
 
   # Vider un plateau
   def empty()
     @board_cases = []
   end
 
-  def play(player, nb_case)
-    #TO DO : une méthode qui change la BoardCase jouée en fonction de la valeur du joueur (X, ou O)
+  # Afficher un plateau
+  def display()
+    alphabet = ("A".."Z").to_a
+    x = 0 # Compteur pour le retour à la ligne
+    y = 0 # Compteur pour les lettres en ordonnées
 
+    print "  "
+    @length.times do |i| # Print chiffres première ligne
+      print " #{i+1} "
+    end
+    print "\n "
 
+    @board_cases.each do |board_case|
+      # Print les lettres (colonnes)
+      if x % @length == 0
+        print alphabet[y]
+        y += 1
+      end
+
+      # Print les cases
+      print board_case.to_s
+      x +=1
+      if x % @length == 0
+        print "\n "
+      end
+    end
   end
-
-  def victory?
-    #TO DO : qui gagne ?
-  end
-
 
 end # End Board
 
 
 
 class BoardCase # Les cases d'un plateau
+  attr_accessor :case_name, :abs, :ord , :val
 
-  #TO DO : la classe a 2 attr_accessor, sa valeur (X, O, ou vide), ainsi que son numéro de case)
+  #A la creation d'une case : abscisse/ordonnée/nom correspondant
+  def initialize(abs, ord)
+    @abs = abs
+    @ord = ord
+    @case_name = "#{convert_ord_to_letter(ord)}#{abs+1}"
+    @val = 0
+  end
 
-    attr_accessor :val, :case_number
+  # Convertir les ordonnées en lettre afin de nommer correctement une case
+  def convert_ord_to_letter(int)
+    alphabet = ("A".."Z").to_a
+    return alphabet[int]
+  end
 
-    def initialize(val, nb)
-      @val = val
-      @case_number = nb
-    end
+  # Définir le statut de la case [X] [O] [ ]
+  def case_to_x()
+    @val = 1 # [X] = 1
+  end
+  def case_to_o()
+    @val = -1 # [O] = 2
+  end
+  def case_to_empty()
+    @val = 0 # [ ] = 0
+  end
 
-    def to_s
-      # Renvoi la valeur au format string
-      if @val == 0 then return "| |"
-      elsif @val == 1 then return "|X|"
-      elsif @val == 2 then return "|O|"
-      end
-    end
+  # Renvoyer la valeur de la case
+  def case_value()
+    return value = self.val
+  end
+
+  def to_s()
+   if @val == 0
+    "| |"
+  elsif @val == -1
+    "|O|"
+  elsif @val == 1
+    "|X|"
+  end
+end
+
 
 end # End BoardCase
 
 
 
 binding.pry
+
+
+def perform
+
+  # Créer un plateau
+  board = Board.new
+
+  game = Game.new
+
+end
