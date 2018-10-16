@@ -38,19 +38,37 @@ class Board # Un plateau contient des cases
   attr_accessor :board_cases
 
   def initialize # A la creation un plateau est vide, on le rempli de cases vides
-    @board_cases = {}
+    @board_cases = []
+      a1 = BoardCase.new(0,1)
+      @board_cases << a1
+      a2 = BoardCase.new(0,2)
+      @board_cases << a2
+      a3 = BoardCase.new(0,3)
+      @board_cases << a3
+      b1 = BoardCase.new(0,4)
+      @board_cases << b1
+      b2 = BoardCase.new(0,5)
+      @board_cases << b2
+      b3 = BoardCase.new(0,6)
+      @board_cases << b3
+      c1 = BoardCase.new(0,7)
+      @board_cases << c1
+      c2 = BoardCase.new(0,8)
+      @board_cases << c2
+      c3 = BoardCase.new(0,9)
+      @board_cases << c3
   end
 
-  # Remplir un plateau avec des cases
-  def fill(x=3, y=x)
-    @length = x
-    @height = y
 
-    alphabet = ("A".."Z").to_a
-    y.times do |y|
-      x.times do |x|
-        @board_cases[alphabet[y] + "#{x+1}"] = BoardCase.new(x,y)
+  def to_s
+    i = 0
+    @board_cases.each do |elem|
+      if i == 3
+      print "\n"
+      i = 0
       end
+    print elem.to_s
+    i += 1
     end
   end
 
@@ -59,19 +77,16 @@ class Board # Un plateau contient des cases
     @board_cases = []
   end
 
-  # Afficher un plateau
-  def display()
-    x = 0 # Compteur pour le retour à la ligne
-    @board_cases.each do |board_case|
-      to_display = board_case.case_display
-      x +=1
-      if x == @length
-        to_display = to_display + "\n"
-        x=0
-      end
-      print to_display
-    end
+  def play(player, nb_case)
+    #TO DO : une méthode qui change la BoardCase jouée en fonction de la valeur du joueur (X, ou O)
+
+
   end
+
+  def victory?
+    #TO DO : qui gagne ?
+  end
+
 
 end # End Board
 
@@ -86,18 +101,6 @@ class BoardCase # Les cases d'un plateau
     def initialize(val, nb)
       @val = val
       @case_number = nb
-    end
-
-    def create_cases()
-      a1 = BoardCase.new(0,1)
-      a2 = BoardCase.new(0,2)
-      a3 = BoardCase.new(0,3)
-      b1 = BoardCase.new(0,4)
-      b2 = Boardcase.new(0,5)
-      b3 = Boardcase.new(0,6)
-      c1 = Boardcase.new(0,7)
-      c2 = Boardcase.new(0,8)
-      c3 = Boardcase.new(0,9)
     end
 
     def to_s
